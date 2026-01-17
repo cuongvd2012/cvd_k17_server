@@ -44,8 +44,9 @@ async def handle_connection(websocket):
     finally:
         connected_clients.remove(websocket)
 async def main():
-    async with websockets.serve(handle_connection, "0.0.0.0", 8765):
-        print(f"Server with File Persistence started. History loaded from {DB_FILE}")
+    port = int(os.environ.get("PORT", 8765))
+    async with websockets.serve(handle_connection, "0.0.0.0", port):
+        print(f"Server is live on port {port}")
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
