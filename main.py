@@ -3,7 +3,7 @@ import websockets
 import os
 import http
 async def health_check(path, request_headers):
-    if path == "/healthz" or path == "/" or path == "/health_check":
+    if path in ["/", "/healthz", "/health_check"]:
         return http.HTTPStatus.OK, [], b"OK\n"
     return None
 DB_FILE = "/tmp/chat_history.txt"
@@ -67,6 +67,7 @@ async def main():
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
