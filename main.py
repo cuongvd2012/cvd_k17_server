@@ -6,8 +6,7 @@ async def health_check(path, request_headers):
     if path == "/healthz" or path == "/" or path == "/health_check":
         return http.HTTPStatus.OK, [], b"OK\n"
     return None
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_FILE = os.path.join(BASE_DIR, "chat_history.txt")
+DB_FILE = "/tmp/chat_history.txt"
 if not os.path.exists(DB_FILE):
     with open(DB_FILE, "w") as f:
         pass
@@ -25,7 +24,6 @@ def save_to_file(message):
         with open(DB_FILE, "a", encoding="utf-8") as f:
             f.write(message + "\n")
     except Exception as e:
-        # We print the error instead of crashing the server
         print(f"Error saving to file: {e}")
 def clear_physical_history():
     try:
@@ -69,6 +67,7 @@ async def main():
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
