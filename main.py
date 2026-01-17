@@ -3,22 +3,32 @@ import websockets
 import os
 import http
 async def health_check(path, request_headers):
-    if path == "/healthz" or path == "/":
+    if path == "/healthz" or path == "/" or path == "/health_check":
         return http.HTTPStatus.OK, [], b"OK\n"
     return None
-DB_FILE = "chat_history.txt"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_FILE = os.path.join(BASE_DIR, "chat_history.txt")
 if not os.path.exists(DB_FILE):
     with open(DB_FILE, "w") as f:
         pass
 def load_history():
-    with open(DB_FILE, "r") as f:
-        return [line.strip() for line in f.readlines()]
+    try:
+        with open(DB_FILE, "r") as f:
+            return [line.strip() for line in f.readlines()]
+    except Exception as e:
+        print(f"Error loading file: {e}")
 def save_to_file(message):
-    with open(DB_FILE, "a") as f:
-        f.write(message + "\n")
+    try:
+        with open(DB_FILE, "a", encoding="utf-8") as f:
+            f.write(message + "\n")
+    except Exception as e:
+        print(f"Error saving to file: {e}")
 def clear_physical_history():
-    with open(DB_FILE, "w") as f:
-        f.truncate(0)
+    try:
+        with open(DB_FILE, "w") as f:
+            f.truncate(0)
+    except Exception as e:
+        print(f"Error clearing file: {e}")
 connected_clients = set()
 message_history = load_history()
 async def handle_connection(websocket):
@@ -55,4 +65,5 @@ async def main():
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
