@@ -12,16 +12,20 @@ if not os.path.exists(DB_FILE):
     with open(DB_FILE, "w") as f:
         pass
 def load_history():
+    if not os.path.exists(DB_FILE):
+        return []
     try:
-        with open(DB_FILE, "r") as f:
+        with open(DB_FILE, "r", encoding="utf-8") as f:
             return [line.strip() for line in f.readlines()]
     except Exception as e:
         print(f"Error loading file: {e}")
+        return []
 def save_to_file(message):
     try:
         with open(DB_FILE, "a", encoding="utf-8") as f:
             f.write(message + "\n")
     except Exception as e:
+        # We print the error instead of crashing the server
         print(f"Error saving to file: {e}")
 def clear_physical_history():
     try:
@@ -65,5 +69,6 @@ async def main():
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
