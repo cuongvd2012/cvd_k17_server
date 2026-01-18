@@ -2,6 +2,7 @@ import asyncio
 import websockets
 import os
 import http
+from websockets.server import ServerProtocol
 class MyServerProtocol(ServerProtocol):
     def is_http_get(self, method):
         return method in ["GET", "HEAD"]
@@ -77,6 +78,7 @@ async def main():
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
