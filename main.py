@@ -62,11 +62,17 @@ async def handle_connection(websocket):
         connected_clients.remove(websocket)
 async def main():
     port = int(os.environ.get("PORT", 8765))
-    async with websockets.serve(handle_connection, "0.0.0.0", port):
+    async with websockets.serve(
+        handle_connection, 
+        "0.0.0.0", 
+        port, 
+        process_request=health_check
+    ):
         print(f"Server is live on port {port}")
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
