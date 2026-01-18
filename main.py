@@ -2,6 +2,10 @@ import asyncio
 import websockets
 import os
 import http
+class MyServerProtocol(ServerProtocol):
+    def is_http_get(self, method):
+        return method in ["GET", "HEAD"]
+
 async def health_check(path, request_headers):
     if path in ["/", "/healthz", "/health_check"]:
         return http.HTTPStatus.OK, [], b"OK\n"
@@ -66,12 +70,14 @@ async def main():
         handle_connection, 
         "0.0.0.0", 
         port, 
-        process_request=health_check
+        process_request=health_check,
+        create_protocol=MyServerProtocol
     ):
         print(f"Server is live on port {port}")
         await asyncio.Future()
 if __name__ == "__main__":
     asyncio.run(main())
+
 
 
 
