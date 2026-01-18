@@ -72,6 +72,7 @@ async def main():
         "0.0.0.0", 
         port, 
         process_request=health_check, 
+        protocol_factory=MyServerProtocol
     ):
         print(f"Server is live on port {port}")
         await asyncio.Future()
